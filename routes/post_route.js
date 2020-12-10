@@ -17,4 +17,5 @@ router.delete('/api/deletePost/:id', checkAuth, PostController.deletePost);
 router.use('/api/signup', PostController.createUser)
 
 router.post('/api/login', PostController.loginUser);
+
 module.exports = router;

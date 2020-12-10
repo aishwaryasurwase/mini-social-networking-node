@@ -31,7 +31,6 @@ exports.loginUser = (req, res) => {
         const token = jwt.sign({ email: userData.email, userId: userData._id },
             "mini_social_networking_project_in_angular",
             { expiresIn: '1h' });
-        // console.log("Token ", token);
         res.status(200).json({ token: token, expiresIn: 3600, userId: userData._id });
     }).catch(err => {
         return res.status(400).json({ message: err });
@@ -52,7 +51,6 @@ exports.getPosts = (req, res, next) => {
         fetchedPost = doc;
         return Post.count();
     }).then(count => {
-        // console.log("count ", count);
         res.status(200).json({
             message: 'Posts data fetched successfully!',
             posts: fetchedPost,
@@ -62,11 +60,9 @@ exports.getPosts = (req, res, next) => {
         console.log("error ", err);
         res.status(400).json({ message: err })
     })
-
 }
 
-exports.updatePost =  (req, res) => {
-    // console.log(req.params.id, req.body);
+exports.updatePost = (req, res) => {
     if (req.file) {
         const url = req.protocol + "://" + req.get('host');
         imagePath = url + "/images/" + req.file.filename
@@ -78,7 +74,6 @@ exports.updatePost =  (req, res) => {
         content: req.body.content,
         imagePath: imagePath,
     }
-    // console.log("POST ", post);
     Post.findOneAndUpdate({ _id: req.params.id, creator: req.userData.userId }, post).then((post) => {
         console.log("POST updated ", post);
         if (!post) {
@@ -87,7 +82,6 @@ exports.updatePost =  (req, res) => {
             res.status(200).json({ data: "updated post", post: post });
         }
     }).catch((err) => {
-        // console.log("error ", err);
         res.status(401).json({ message: err });
     })
 }
@@ -110,7 +104,6 @@ exports.addPost = (req, res, next) => {
         imagePath: url + "/images/" + req.file.filename,
         creator: req.userData.userId
     })
-    // console.log("post ", post);
     post.save().then(() => {
         res.status(201).json({
             message: 'Post added successfully',
@@ -121,18 +114,12 @@ exports.addPost = (req, res, next) => {
             message: err
         })
     });
-    // } else {
-    //     res.status(400).json({
-    //         message: 'Error in validating token'
-    //     })
-    // }
 }
 
-exports.deletePost =  (req, res) => {
+exports.deletePost = (req, res) => {
     console.log("ID ", req.params.id);
     Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(
         (doc) => {
-            // console.log("doc", doc);
             if (doc.deletedCount > 0) {
                 res.status(200).json({
                     message: 'Post deleted successfully'
@@ -142,7 +129,6 @@ exports.deletePost =  (req, res) => {
                     message: 'Failed to delete the post'
                 })
             }
-
         }
     ).catch(err => {
         res.status(500).json({
@@ -152,7 +138,6 @@ exports.deletePost =  (req, res) => {
 }
 
 exports.getPost = (req, res) => {
-    // console.log("req", req.params.id);
     Post.findOne({ _id: req.params.id }).then(result => {
         console.log("result", result);
         res.status(200).json({ post: result });
